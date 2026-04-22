@@ -1,23 +1,35 @@
-
-from typing import Optional
-from pydantic import BaseModel
 from datetime import date, datetime
+from typing import Optional
 
-class Task(BaseModel):
-    id: int
-    project_id: int
+from pydantic import BaseModel
+
+
+class TaskBase(BaseModel):
     title: str
     priority: int
     completed: bool = False
     due_date: Optional[date] = None
-    
-class Project(BaseModel):
+
+
+class Task(TaskBase):
+    id: int
+    project_id: int
+
+    class Config:
+        from_attributes = True
+
+
+class ProjectCreate(BaseModel):
     name: str
-    price: float
-    is_offer: bool | None = None
+    description: Optional[str] = None
+
+
+class ProjectResponse(BaseModel):
     id: int
     name: str
     description: Optional[str] = None
     created_at: datetime
-    tasks: list["Task"] = []
-    
+
+    class Config:
+        from_attributes = True
+
